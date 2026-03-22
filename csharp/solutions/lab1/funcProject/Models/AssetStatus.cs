@@ -3,8 +3,10 @@ using System.Text.Json.Serialization;
 namespace FuncProject.Models;
 
 [JsonConverter(typeof(JsonStringEnumConverter))]
-public enum ProductStatus
+public enum AssetStatus
 {
-    Active,
-    Inactive
+    Available,
+    Assigned,
+    InRepair,
+    Retired
 }

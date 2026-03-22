@@ -26,7 +26,7 @@ namespace FuncProject
                 <!DOCTYPE html>
                 <html>
                 <head>
-                    <title>Serverless HTTP API - Swagger UI</title>
+                    <title>IT Asset Tracker API - Swagger UI</title>
                     <link rel="stylesheet" type="text/css" href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css" />
                 </head>
                 <body>
@@ -56,9 +56,9 @@ namespace FuncProject
             {
                 Info = new OpenApiInfo
                 {
-                    Title = "Inventory API",
+                    Title = "IT Asset Tracker API",
                     Version = "1.0.0",
-                    Description = "Azure Functions HTTP API with ASP.NET Core"
+                    Description = "Azure Functions HTTP API for tracking IT assets"
                 },
                 Paths = new OpenApiPaths
                 {
@@ -145,19 +145,19 @@ namespace FuncProject
                             }
                         }
                     },
-                    ["/api/products"] = new OpenApiPathItem
+                    ["/api/assets"] = new OpenApiPathItem
                     {
                         Operations =
                         {
                             [OperationType.Get] = new OpenApiOperation
                             {
-                                Summary = "List all products in inventory",
-                                OperationId = "ListProducts",
+                                Summary = "List all tracked IT assets",
+                                OperationId = "ListAssets",
                                 Responses = new OpenApiResponses
                                 {
                                     ["200"] = new OpenApiResponse
                                     {
-                                        Description = "List of products",
+                                        Description = "List of assets",
                                         Content =
                                         {
                                             ["application/json"] = new OpenApiMediaType
@@ -170,7 +170,7 @@ namespace FuncProject
                                                         ["items"] = new OpenApiSchema
                                                         {
                                                             Type = "array",
-                                                            Items = ProductSchema()
+                                                            Items = AssetSchema()
                                                         }
                                                     }
                                                 }
@@ -181,8 +181,8 @@ namespace FuncProject
                             },
                             [OperationType.Post] = new OpenApiOperation
                             {
-                                Summary = "Add a new product to the inventory",
-                                OperationId = "AddProduct",
+                                Summary = "Register a new IT asset",
+                                OperationId = "AddAsset",
                                 RequestBody = new OpenApiRequestBody
                                 {
                                     Required = true,
@@ -190,7 +190,7 @@ namespace FuncProject
                                     {
                                         ["application/json"] = new OpenApiMediaType
                                         {
-                                            Schema = ProductCreateSchema()
+                                            Schema = AssetCreateSchema()
                                         }
                                     }
                                 },
@@ -198,36 +198,36 @@ namespace FuncProject
                                 {
                                     ["201"] = new OpenApiResponse
                                     {
-                                        Description = "Product created",
+                                        Description = "Asset registered",
                                         Content =
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
-                                                Schema = ProductSchema()
+                                                Schema = AssetSchema()
                                             }
                                         }
                                     },
                                     ["409"] = new OpenApiResponse
                                     {
-                                        Description = "Product with this SKU already exists"
+                                        Description = "Asset with this tag already exists"
                                     }
                                 }
                             }
                         }
                     },
-                    ["/api/products/{sku}"] = new OpenApiPathItem
+                    ["/api/assets/{assetTag}"] = new OpenApiPathItem
                     {
                         Operations =
                         {
                             [OperationType.Get] = new OpenApiOperation
                             {
-                                Summary = "Get a specific product by SKU",
-                                OperationId = "GetProduct",
+                                Summary = "Get a specific asset by asset tag",
+                                OperationId = "GetAsset",
                                 Parameters = new List<OpenApiParameter>
                                 {
                                     new()
                                     {
-                                        Name = "sku",
+                                        Name = "assetTag",
                                         In = ParameterLocation.Path,
                                         Required = true,
                                         Schema = new OpenApiSchema { Type = "string" }
@@ -237,18 +237,18 @@ namespace FuncProject
                                 {
                                     ["200"] = new OpenApiResponse
                                     {
-                                        Description = "Product found",
+                                        Description = "Asset found",
                                         Content =
                                         {
                                             ["application/json"] = new OpenApiMediaType
                                             {
-                                                Schema = ProductSchema()
+                                                Schema = AssetSchema()
                                             }
                                         }
                                     },
                                     ["404"] = new OpenApiResponse
                                     {
-                                        Description = "Product not found"
+                                        Description = "Asset not found"
                                     }
                                 }
                             }
@@ -258,30 +258,37 @@ namespace FuncProject
             };
         }
 
-        private static OpenApiSchema ProductCreateSchema() => new()
+        private static OpenApiSchema AssetCreateSchema() => new()
         {
             Type = "object",
             Properties =
             {
                 ["name"] = new OpenApiSchema { Type = "string", MaxLength = 255 },
                 ["description"] = new OpenApiSchema { Type = "string", Nullable = true, MaxLength = 1000 },
-                ["category"] = new OpenApiSchema { Type = "string", MaxLength = 100 },
-                ["price"] = new OpenApiSchema { Type = "number", Format = "decimal" },
-                ["sku"] = new OpenApiSchema { Type = "string", Pattern = @"^[A-Z0-9-]+$", MaxLength = 50 },
-                ["quantity"] = new OpenApiSchema { Type = "integer", Default = new OpenApiInteger(0) },
+                ["department"] = new OpenApiSchema { Type = "string", MaxLength = 100 },
+                ["purchasePrice"] = new OpenApiSchema { Type = "number", Format = "decimal" },
+                ["assetTag"] = new OpenApiSchema { Type = "string", Pattern = @"^[A-Z0-9-]+$", MaxLength = 50 },
+                ["type"] = new OpenApiSchema
+                {
+                    Type = "string",
+                    Enum = { new OpenApiString("Laptop"), new OpenApiString("Monitor"), new OpenApiString("Phone"), new OpenApiString("Printer"), new OpenApiString("Software"), new OpenApiString("Other") },
+                    Default = new OpenApiString("Other")
+                },
+                ["assignedTo"] = new OpenApiSchema { Type = "string", Nullable = true, MaxLength = 255 },
+                ["purchaseDate"] = new OpenApiSchema { Type = "string", Format = "date", Nullable = true },
                 ["status"] = new OpenApiSchema
                 {
                     Type = "string",
-                    Enum = { new OpenApiString("Active"), new OpenApiString("Inactive") },
-                    Default = new OpenApiString("Active")
+                    Enum = { new OpenApiString("Available"), new OpenApiString("Assigned"), new OpenApiString("InRepair"), new OpenApiString("Retired") },
+                    Default = new OpenApiString("Available")
                 }
             },
-            Required = new HashSet<string> { "name", "category", "price", "sku" }
+            Required = new HashSet<string> { "name", "department", "purchasePrice", "assetTag", "type" }
         };
 
-        private static OpenApiSchema ProductSchema()
+        private static OpenApiSchema AssetSchema()
         {
-            var schema = ProductCreateSchema();
+            var schema = AssetCreateSchema();
             schema.Properties["id"] = new OpenApiSchema { Type = "string" };
             return schema;
         }

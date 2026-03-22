@@ -31,7 +31,7 @@ Each lab is independent with dedicated directories, separate ports (7071–7074)
 
 | Lab | Focus | Directory | Port | Description |
 |-----|-------|-----------|------|-------------|
-| **Lab 1** | Basic Functions | `solutions/lab1/` | 7071 | HTTP-triggered Azure Function with ASP.NET Core integration, data annotations validation, in-memory storage, and Swagger UI |
+| **Lab 1** | Basic Functions | `solutions/lab1/` | 7071 | HTTP-triggered Azure Function with ASP.NET Core integration, IT asset tracking, data annotations validation, in-memory storage, and Swagger UI |
 
 📖 **Each lab has its own detailed README with setup instructions and learning objectives.**
 

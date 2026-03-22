@@ -1,6 +1,6 @@
 namespace FuncProject.Models;
 
-public class ProductResponse : ProductCreate
+public class AssetResponse : AssetCreate
 {
     public string Id { get; set; } = string.Empty;
 }

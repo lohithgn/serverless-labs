@@ -16,7 +16,7 @@ param resourceGroupName string = ''
 param cosmosAccountName string = ''
 
 @description('Name of the Cosmos DB database.')
-param cosmosDatabaseName string = 'inventory'
+param cosmosDatabaseName string = 'assetmanagement'
 
 var tags = {
   'azd-env-name': environmentName
@@ -86,5 +86,5 @@ output functionAppHostname string = functionApp.outputs.defaultHostname
 output cosmosDbEndpoint string = cosmosDb.outputs.endpoint
 output cosmosDbAccountName string = cosmosDb.outputs.accountName
 output cosmosDatabaseName string = cosmosDb.outputs.databaseName
-output productsContainerName string = cosmosDb.outputs.productsContainerName
+output assetsContainerName string = cosmosDb.outputs.assetsContainerName
 output leasesContainerName string = cosmosDb.outputs.leasesContainerName

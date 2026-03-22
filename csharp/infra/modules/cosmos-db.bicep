@@ -10,11 +10,11 @@ param tags object = {}
 @description('Name of the database to create.')
 param databaseName string
 
-@description('Name of the products container.')
-param productsContainerName string = 'products'
+@description('Name of the assets container.')
+param assetsContainerName string = 'assets'
 
-@description('Partition key path for the products container.')
-param productsPartitionKeyPath string = '/category'
+@description('Partition key path for the assets container.')
+param assetsPartitionKeyPath string = '/department'
 
 @description('Name of the leases container (for change feed).')
 param leasesContainerName string = 'leases'
@@ -58,28 +58,29 @@ resource database 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2024-05-15
   }
 }
 
-resource productsContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2024-05-15' = {
+resource assetsContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2024-05-15' = {
   parent: database
-  name: productsContainerName
+  name: assetsContainerName
   properties: {
     resource: {
-      id: productsContainerName
+      id: assetsContainerName
       partitionKey: {
-        paths: [productsPartitionKeyPath]
+        paths: [assetsPartitionKeyPath]
         kind: 'Hash'
       }
       uniqueKeyPolicy: {
         uniqueKeys: [
-          { paths: ['/sku'] }
+          { paths: ['/assetTag'] }
         ]
       }
       indexingPolicy: {
         indexingMode: 'consistent'
         includedPaths: [
-          { path: '/sku/?' }
+          { path: '/assetTag/?' }
           { path: '/name/?' }
-          { path: '/category/?' }
+          { path: '/department/?' }
           { path: '/status/?' }
+          { path: '/type/?' }
         ]
         excludedPaths: [
           { path: '/*' }
@@ -114,5 +115,5 @@ output endpoint string = cosmosAccount.properties.documentEndpoint
 output accountName string = cosmosAccount.name
 output accountId string = cosmosAccount.id
 output databaseName string = database.name
-output productsContainerName string = productsContainer.name
+output assetsContainerName string = assetsContainer.name
 output leasesContainerName string = leasesContainer.name

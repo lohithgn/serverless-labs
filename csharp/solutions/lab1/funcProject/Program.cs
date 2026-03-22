@@ -8,7 +8,7 @@ var builder = FunctionsApplication.CreateBuilder(args);
 builder.ConfigureFunctionsWebApplication();
 
 builder.Services
-    .AddSingleton<FuncProject.ProductStore>()
+    .AddSingleton<FuncProject.AssetStore>()
     .AddApplicationInsightsTelemetryWorkerService()
     .ConfigureFunctionsApplicationInsights();
 

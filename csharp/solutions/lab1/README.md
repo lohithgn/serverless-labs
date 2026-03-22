@@ -21,15 +21,16 @@ lab1/
     ├── Program.cs              # Host builder and DI configuration
     ├── HelloEndpoints.cs       # Hello GET/POST endpoints
     ├── HelloRequest.cs         # Request model for HelloUser
-    ├── ProductEndpoints.cs     # Product CRUD endpoints
-    ├── ProductStore.cs         # In-memory product store
+    ├── AssetEndpoints.cs       # Asset CRUD endpoints
+    ├── AssetStore.cs           # In-memory asset store
     ├── DocsEndpoints.cs        # Custom Swagger UI endpoint
     ├── MyHttpFunction.cs       # Sample HTTP trigger
     ├── Models/
-    │   ├── ProductCreate.cs    # Product creation model with validation
-    │   ├── ProductResponse.cs  # Product response model
-    │   ├── ProductList.cs      # Product list wrapper
-    │   └── ProductStatus.cs    # Product status enum
+    │   ├── AssetCreate.cs      # Asset creation model with validation
+    │   ├── AssetResponse.cs    # Asset response model
+    │   ├── AssetList.cs        # Asset list wrapper
+    │   ├── AssetStatus.cs      # Asset status enum
+    │   └── AssetType.cs        # Asset type enum
     ├── funcProject.csproj      # Project file and dependencies
     ├── host.json               # Azure Functions host configuration
     ├── local.settings.json     # Local development settings
@@ -38,7 +39,7 @@ lab1/
 
 ## Features
 
-- **Product Management**: Add, get, and list products with validation
+- **IT Asset Tracking**: Register, get, and list IT assets with validation
 - **Request Validation**: Using [Data Annotations](https://learn.microsoft.com/dotnet/api/system.componentmodel.dataannotations) for model validation
 - **Health Check**: Simple hello endpoint
 - **Error Handling**: Proper HTTP status codes and error messages
@@ -57,4 +58,4 @@ lab1/
 Notes:
 
 - The project targets **.NET 10** and uses the **isolated worker model** (`dotnet-isolated`).
-- The in-memory `ProductStore` is registered as a singleton, so data persists for the lifetime of the host process.
+- The in-memory `AssetStore` is registered as a singleton, so data persists for the lifetime of the host process.
