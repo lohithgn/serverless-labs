@@ -13,9 +13,9 @@ public class AssetStore
         return asset;
     }
 
-    public AssetList GetAll()
+    public List<AssetResponse> GetAll()
     {
-        return new AssetList { Items = _assets.Values.ToList() };
+        return _assets.Values.ToList();
     }
 
     public (AssetResponse? Asset, bool AlreadyExists) Create(AssetCreate asset)
